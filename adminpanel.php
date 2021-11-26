@@ -44,7 +44,6 @@ $queryRecords = mysqli_query($conn, $sql) or die("error to fetch user database")
 </body>
 </html>
 <?php
-if ($_SESSION['id']!=$_POST['id']){
    if(isset($_POST['id']) && $_POST['id'] > 0){
    $id = (int)$_POST['id'];
    echo $_POST['id'];
@@ -64,31 +63,11 @@ if ($_SESSION['id']!=$_POST['id']){
       } else {
       echo "Error updating record: " . mysqli_error($conn);
       }
-   }
-
-}else{
-   if(isset($_POST['id']) && $_POST['id'] > 0){
-      $id = (int)$_POST['id'];
-      echo $_POST['id'];
-      echo "<br>";
-      echo $_POST['username_'.$id]." ";
-      $username = "UPDATE user_db SET username='".$_POST['username_'.$id]."' WHERE id=".$_POST['id'];
-      if (mysqli_query($conn, $username)) {
-         echo "Username updated successfully";
-         } else {
-         echo "Error updating record: " . mysqli_error($conn);
-         }
-      echo "<br>";
-      echo $_POST['password_'.$id]." ";
-      $password = "UPDATE user_db SET `password`='".$_POST['password_'.$id]."' WHERE id=".$_POST['id'];
-      if (mysqli_query($conn, $password)) {
-         echo "Password updated successfully";
-         } else {
-         echo "Error updating record: " . mysqli_error($conn);
-         }
-      }
+   if ($_SESSION['id']==$_POST['id']){
       $_SESSION['username']=$_POST['username_'.$id];
+   }
 }
+
 
 //while($row = mysqli_fetch_assoc($r)){
  // var_dump($row);
