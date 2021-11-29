@@ -34,10 +34,24 @@ $queryRecords = mysqli_query($conn, $sql) or die("error to fetch user database")
          <td><?php echo $res['id'];?></td>
          <td><input name="username_<?php echo $res['id'];?>" value="<?php echo $res['username'];?>"></td>
          <td><input name="password_<?php echo $res['id'];?>" value="<?php echo $res['password'];?>"></td>
+         <td><select name="rank_<?php echo $res['id'];?>">
+               <option <?php if ($res['rank']=="user"):?>selected<?php endif;?> value="user">user</option>
+               <option <?php if ($res['rank']=="moderator"):?>selected<?php endif;?> value="moderator" >moderator</option>
+               <option <?php if ($res['rank']=="admin"):?>selected<?php endif;?> value="admin">admin</option>
+            </select>
+         </td>
          <td><input name="id" value="<?php echo $res['id']; ?>" type="submit"></td>
+         <td><input name="id_delete" value="<?php echo $res['id'];?>" type="submit"></td>
          <?php endif;?>
       </tr>
     <?php endforeach;?>
+    <tr>
+         <td></td>
+         <td><input name="username_new" value="new username"></td>
+         <td><input name="password_new" value="new password"></td>
+         
+         <td><input name="add_new" value="Add new" type="submit"></td>
+      </tr>
    </tbody>
    </form>
 </table>
@@ -62,10 +76,37 @@ $queryRecords = mysqli_query($conn, $sql) or die("error to fetch user database")
       echo "Record updated successfully";
       } else {
       echo "Error updating record: " . mysqli_error($conn);
-      }
+   }
+   $rank = "UPDATE user_db SET rank='".$_POST['rank_'.$id]."' WHERE id=".$_POST['id'];
+   if (mysqli_query($conn, $rank)) {
+      echo "Record updated successfully";
+      } else {
+      echo "Error updating record: " . mysqli_error($conn);
+   }
    if ($_SESSION['id']==$_POST['id']){
       $_SESSION['username']=$_POST['username_'.$id];
    }
+   header("Refresh:0");
+}
+if(isset($_POST['id_delete']) && $_POST['id_delete'] > 0){
+   $id = (int)$_POST['id_delete'];
+   $user = "DELETE FROM user_db WHERE id=".$_POST['id_delete'];
+   if (mysqli_query($conn, $user)) {
+      header("Refresh:0");
+      echo "Record updated successfully";
+      } else {
+      echo "Error updating record: " . mysqli_error($conn);
+      }
+}
+if (isset($_POST['add_new'])){
+   $date = date('Y-m-d H:i:s');
+   $sql = "INSERT INTO user_db (username,`password`,token,rank) VALUES ('".$_POST['username_new']."','".$_POST['password_new']."',0,'user')";
+   if (mysqli_query($conn, $sql)) {
+      header("Refresh:0");
+      echo "Record updated successfully";
+      } else {
+      echo "Error updating record: " . mysqli_error($conn);
+      }
 }
 
 
